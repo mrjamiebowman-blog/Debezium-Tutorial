@@ -1,8 +1,8 @@
 version: "3.9"
 services:
   mssql:
-    build: docker\mssql\.
-    context: ./docker/mssql
+    build:
+      context: ./docker/mssql
     ports:
       - "1443:1443"
   zookeeper:

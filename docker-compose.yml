@@ -3,16 +3,19 @@ services:
   mssql:
     build:
       context: ./docker/mssql
+    container_name: mrjb-debezium-mssql
     ports:
       - "1443:1443"
   zookeeper:
     image: debezium/zookeeper
+    container_name: mrjb-debezium-zookeeper
     ports:
      - 2181:2181
      - 2888:2888
      - 3888:3888
   kafka:
     image: debezium/kafka
+    container_name: mrjb-debezium-kafka
     ports:
      - 9092:9092
     links:

@@ -6,6 +6,10 @@ services:
     container_name: mrjb-debezium-mssql
     ports:
       - "1443:1443"
+    networks:
+      - mrjb-debezium-network
+    environment:
+      - ACCEPT_EULA=Y
   zookeeper:
     image: debezium/zookeeper
     container_name: mrjb-debezium-zookeeper
@@ -13,6 +17,8 @@ services:
      - 2181:2181
      - 2888:2888
      - 3888:3888
+    networks:
+      - mrjb-debezium-network
   kafka:
     image: debezium/kafka
     container_name: mrjb-debezium-kafka
@@ -20,6 +26,8 @@ services:
      - 9092:9092
     links:
      - zookeeper
+    networks:
+      - mrjb-debezium-network
     environment:
      - ZOOKEEPER_CONNECT=zookeeper:2181
   debezium-connect:
@@ -29,6 +37,7 @@ services:
     container_name: mrjb-debezium-connect
     ports:
       - 8083:8083
+      - 8084:8084
     depends_on:
       - kafka
     networks:

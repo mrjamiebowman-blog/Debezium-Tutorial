@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # sleep for 25s for sql server to come up
 sleep 25s
 

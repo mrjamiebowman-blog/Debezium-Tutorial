@@ -1,4 +1,4 @@
 #!/bin/bash
 
 # mssql
-/mssql/db-init.sh & /opt/mssql/bin/sqlserver
+/mssql/db-init.sh & /opt/mssql/bin/sqlservr

@@ -20,7 +20,7 @@
 /*                    [SETUP]                    */
 /*************************************************/
 
-USE master
+USE [master]
 GO
 
 CREATE LOGIN debezium WITH PASSWORD = 'EE5F5Z2UKSAtJKAM'
@@ -39,7 +39,7 @@ GO
 /*             [Database: Customers]             */
 /*************************************************/
 
-USE Customers
+USE [Customers]
 GO
 
 CREATE USER debezium FOR LOGIN debezium
@@ -74,10 +74,21 @@ CREATE TABLE [dbo].[Customers](
 GO
 
 /*************************************************/
+/*                    [CDC]                      */
+/*************************************************/
+
+EXECUTE sys.sp_cdc_enable_table  
+    @source_schema = N'dbo'  
+  , @source_name = N'Customers'  
+  , @role_name = N'debezium_role'
+  , @column_lists = NULL;  
+GO  
+
+/*************************************************/
 /*             [Database: Orders]                */
 /*************************************************/
 
-USE Orders
+USE [Orders]
 GO
 
 CREATE USER debezium FOR LOGIN debezium
@@ -154,19 +165,26 @@ GO
 /*                    [CDC]                      */
 /*************************************************/
 
--- EXECUTE sys.sp_cdc_enable_table  
---     @source_schema = N'dbo'  
---   , @source_name = N'Transactions'  
---   , @role_name = N'debezium_role'
---   , @column_lists = NULL;  
--- GO  
+EXECUTE sys.sp_cdc_enable_table  
+    @source_schema = N'dbo'  
+  , @source_name = N'Orders'  
+  , @role_name = N'debezium_role'
+  , @column_lists = NULL;  
+GO  
+
+EXECUTE sys.sp_cdc_enable_table  
+    @source_schema = N'dbo'  
+  , @source_name = N'OrdersLineItems'  
+  , @role_name = N'debezium_role'
+  , @column_lists = NULL;  
+GO  
 
 
 /*************************************************/
 /*             [Database: Products]              */
 /*************************************************/
 
-USE Products
+USE [Products]
 GO
 
 CREATE USER debezium FOR LOGIN debezium
@@ -201,6 +219,17 @@ CREATE TABLE [dbo].[Products](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
+
+/*************************************************/
+/*                    [CDC]                      */
+/*************************************************/
+
+EXECUTE sys.sp_cdc_enable_table  
+    @source_schema = N'dbo'  
+  , @source_name = N'Products'  
+  , @role_name = N'debezium_role'
+  , @column_lists = NULL;  
+GO  
 
 
 /*************************************************/

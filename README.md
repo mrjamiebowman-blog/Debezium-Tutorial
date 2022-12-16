@@ -17,6 +17,14 @@ The administrative `sa` password is `RqrhWH5HmwGc6mEF`
 The `debezium` usser password is `EE5F5Z2UKSAtJKAM`   
 
 
+## CDC Troubleshooting
+
+```sql
+/*************************************************/
+/*               [CDC - STATUS]                  */
+/*************************************************/
+
+```
 
 ```sql
 

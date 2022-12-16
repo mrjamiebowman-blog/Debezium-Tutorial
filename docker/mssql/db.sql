@@ -207,6 +207,9 @@ GO
 /*           	[DATA: CUSTOMERS]       	     */
 /*************************************************/
 
+USE [Customers]
+GO
+
 INSERT INTO [dbo].[Customers] ([FirstName], [LastName],[Email]) VALUES ('Jamie', 'Bowman', 'noreply@mrjamiebowman.com')
 GO
 
@@ -215,16 +218,52 @@ GO
 /*           	[DATA: PRODUCTS]       	         */
 /*************************************************/
 
+USE [Products]
+GO
+
+INSERT INTO [dbo].[Products] ([Name], [Description], [Price], [DateCreated], [DateModified]) VALUES ('Product Name #1', 'Product Description', 12.99,  GETDATE(), GETDATE())
+GO
+
+INSERT INTO [dbo].[Products] ([Name], [Description], [Price], [DateCreated], [DateModified]) VALUES ('Product Name #2', 'Product Description', 29.99,  GETDATE(), GETDATE())
+GO
+
 
 /*************************************************/
 /*           	[DATA: ORDERS]          	     */
 /*************************************************/
 
+USE [Orders]
+GO
 
+DECLARE @ORDERID INT = NULL
+
+INSERT INTO [dbo].[Orders] ([CustomerId], [Taxes], [Subtotal], [Total], [DateCreated], [DateModified]) VALUES (1, 5, 14.99, 19.99, GETDATE(), GETDATE())
+GO
+
+SET @ORDERID = SELECT SCOPE_IDENTITY()
 
 /*************************************************/
 /*           	[DATA: ORDER ITEMS]       	     */
 /*************************************************/
 
+USE [Orders]
+GO
 
+INSERT INTO [dbo].[OrdersLineItems]
+           ([OrderId]
+           ,[Productid]
+           ,[Product]
+           ,[Quantity]
+           ,[Total]
+           ,[DateCreated]
+           ,[DateModified])
+     VALUES
+           (1
+           ,1
+           ,'Product Name'
+           ,1
+           ,14.99
+           ,GETDATE()
+		   ,GETDATE())
+GO
 

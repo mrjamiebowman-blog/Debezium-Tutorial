@@ -13,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{692537B4-88E
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MrJb.Debezium.Consumer", "src\MrJb.Debezium.Consumer\MrJb.Debezium.Consumer.csproj", "{AF3C58CD-B060-4518-9FB8-C5043F8590CF}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MrJB.Debezium.Domain", "src\MrJB.Debezium.Domain\MrJB.Debezium.Domain.csproj", "{A05ECDF6-8EA5-4FE7-9EAC-2AE67D12DD0A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,12 +25,17 @@ Global
 		{AF3C58CD-B060-4518-9FB8-C5043F8590CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF3C58CD-B060-4518-9FB8-C5043F8590CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF3C58CD-B060-4518-9FB8-C5043F8590CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A05ECDF6-8EA5-4FE7-9EAC-2AE67D12DD0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A05ECDF6-8EA5-4FE7-9EAC-2AE67D12DD0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A05ECDF6-8EA5-4FE7-9EAC-2AE67D12DD0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A05ECDF6-8EA5-4FE7-9EAC-2AE67D12DD0A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{AF3C58CD-B060-4518-9FB8-C5043F8590CF} = {692537B4-88E8-4585-85D0-05EA549708A0}
+		{A05ECDF6-8EA5-4FE7-9EAC-2AE67D12DD0A} = {692537B4-88E8-4585-85D0-05EA549708A0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1243192C-0B63-4C61-A5F5-42DD565358BE}

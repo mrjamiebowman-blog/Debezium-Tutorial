@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="CDC\" />
     <Folder Include="JsonConverters\" />
   </ItemGroup>
 

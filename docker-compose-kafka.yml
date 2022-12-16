@@ -34,7 +34,8 @@ services:
     environment:
      - ZOOKEEPER_CONNECT=zookeeper:2181
   debezium-connect:
-    build:
+    image: mrjb/debezium-connect:${DEBEZIUM_VERSION}
+    build:      
       context: ./docker/connect/
       dockerfile: Dockerfile
       args:

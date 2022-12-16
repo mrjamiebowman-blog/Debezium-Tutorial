@@ -1,0 +1,1 @@
+docker run -it --rm debezium-tutorial-debezium-connect /bin/bash

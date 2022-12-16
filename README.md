@@ -7,6 +7,7 @@ This Debezium tutorial will use SQL server in Docker to push to Kafka / Azure Ev
 After cloing the repository you will need to start `Debezium` which will expose `Kafka Connect`.
 
 ### Steps
+* Setup .env file. Use .env.sample or rename to .env
 * Start Docker Compose.
 * Enable Change Data Capture (CDC) on the MSSQL Server.
 * Enable capture tables.

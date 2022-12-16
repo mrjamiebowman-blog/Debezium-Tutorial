@@ -15,7 +15,7 @@ services:
      - 3888:3888
   kafka:
     image: debezium/kafka
-    container_name: mrjb-debezium-kafka
+    container_name: mrjb-debezium-kafka    
     ports:
      - 9092:9092
     links:
@@ -26,11 +26,14 @@ services:
     build:
       context: ./docker/connect/
       dockerfile: Dockerfile
+    image: mrjb-debezium-connect
     container_name: mrjb-debezium-connect
     ports:
       - 8083:8083
     depends_on:
       - kafka
+      - mssql
+      - zookeeper
     networks:
       - mrjb-debezium-network
     environment:

@@ -10,17 +10,17 @@
 ARG UBUNTU_VERSION=23.04 as ubuntu
 ARG DEBEZIUM_VERSION=1.9
 
-# self-signed certificate
-ARG KEYSTORE_PASSWORD=keystorepassword
-ARG TRUSTSTORE_PASSWORD=truststorepassword
-ARG KEY_PASSWORD=keypassword
-ARG CA_PASSWORD=capassword
-
 #####################################################
 #                     UBUNTU                        #
 #####################################################
 
 FROM ubuntu:$UBUNTU_VERSION
+
+# self-signed certificate
+ARG KEYSTORE_PASSWORD=keystorepassword
+ARG TRUSTSTORE_PASSWORD=truststorepassword
+ARG KEY_PASSWORD=keypassword
+ARG CA_PASSWORD=capassword
 
 # directories
 RUN mkdir -p /keystores
@@ -36,18 +36,18 @@ RUN keytool -genkey -keystore keystore.jks -alias localhost -keyalg RSA -validit
 # generate certificate authority (ca)
 RUN openssl req -new -x509 -keyout ca-key -out ca-cert -days 365 -passout pass:${CA_PASSWORD} -subj "/C=US/ST=Missouri/L=St.Louis/D=Blog/OU=Dev/CN=localhost"
 
-# # import into keystore
-# RUN keytool -importcert -keystore truststore.jks -alias CaRoot -file ca-cert -noprompt -storepass ${KEYSTORE_PASSWORD}
+# import into keystore
+RUN keytool -importcert -keystore truststore.jks -alias CaRoot -file ca-cert -noprompt -storepass ${KEYSTORE_PASSWORD}
 
-# # export the cert, sign it, restore it
-# RUN keytool -certreq -keystore keystore.jks -alias localhost -file cert-file -storepass ${KEYSTORE_PASSWORD}
+# export the cert, sign it, restore it
+RUN keytool -certreq -keystore keystore.jks -alias localhost -file cert-file -storepass ${KEYSTORE_PASSWORD}
 
-# # sign cert with ca
-# RUN openssl x509 -req -CA ca-cert -CAkey ca-key -in cert-file -out cert-signed -days 365 -CAcreateserial -passin pass:${CA_PASSWORD}
+# sign cert with ca
+RUN openssl x509 -req -CA ca-cert -CAkey ca-key -in cert-file -out cert-signed -days 365 -CAcreateserial -passin pass:${CA_PASSWORD}
 
-# #  import
-# RUN keytool -importcert -keystore keystore.jks -alias CaRoot -file ca-cert -noprompt -storepass ${KEYSTORE_PASSWORD}
-# RUN keytool -importcert -keystore keystore.jks -alias localhost -file cert-signed -noprompt -storepass ${KEYSTORE_PASSWORD}
+#  import
+RUN keytool -importcert -keystore keystore.jks -alias CaRoot -file ca-cert -noprompt -storepass ${KEYSTORE_PASSWORD}
+RUN keytool -importcert -keystore keystore.jks -alias localhost -file cert-signed -noprompt -storepass ${KEYSTORE_PASSWORD}
 
 #####################################################
 #                     DEBEZIUM                      #

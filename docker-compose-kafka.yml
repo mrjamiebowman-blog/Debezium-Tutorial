@@ -38,6 +38,7 @@ services:
       context: ./docker/connect/
       dockerfile: Dockerfile
       args:
+        - DEBEZIUM_VERSION=${DEBEZIUM_VERSION}
         - KEYSTORE_PASSWORD=${KEY_PASSWORD}
         - TRUSTSTORE_PASSWORD=${TRUSTSTORE_PASSWORD}
         - KEY_PASSWORD=${KEY_PASSWORD}

@@ -1,4 +1,7 @@
-FROM debezium/connect:latest
+
+
+ARG DEBEZIUM_VERSION=1.9
+FROM debezium/connect:$DEBEZIUM_VERSION
 USER root
 
 # copy plugins

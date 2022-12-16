@@ -53,31 +53,31 @@ RUN keytool -importcert -keystore keystore.jks -alias localhost -file cert-signe
 #                     DEBEZIUM                      #
 #####################################################
 
-# FROM debezium/connect:$DEBEZIUM_VERSION
-# USER root
+FROM debezium/connect:$DEBEZIUM_VERSION
+USER root
 
-# # copy plugins
-# COPY plugins/ /kafka/connect/debezium-connector-sqlserver/
-# RUN chmod -R 644 /kafka/connect/debezium-connector-sqlserver/*.jar
-# RUN chown kafka:kafka -R /kafka/connect/debezium-connector-sqlserver/*.jar
+# copy plugins
+COPY plugins/ /kafka/connect/debezium-connector-sqlserver/
+RUN chmod -R 644 /kafka/connect/debezium-connector-sqlserver/*.jar
+RUN chown kafka:kafka -R /kafka/connect/debezium-connector-sqlserver/*.jar
 
-# # basic authentication
-# WORKDIR /kafka/config
-# COPY connect.password .
-# COPY debezium_jaas.conf .
-# RUN chown kafka:kafka debezium_jaas.conf connect.password
+# basic authentication
+WORKDIR /kafka/config
+COPY connect.password .
+COPY debezium_jaas.conf .
+RUN chown kafka:kafka debezium_jaas.conf connect.password
 
-# # keystores
-# RUN mkdir -p /keystores
-# COPY --from=ubuntu --chown=kafka:kafka /keystores/*.jks /keystores/
+# keystores
+RUN mkdir -p /keystores
+COPY --from=ubuntu --chown=kafka:kafka /keystores/*.jks /keystores/
 
-# # permissions
-# RUN chmod -R 644 /kafka/connect/debezium-connector-sqlserver/*.jar
-# RUN chown kafka:kafka -R /kafka/connect/debezium-connector-sqlserver/*.jar
-# RUN chown kafka:kafka -R /kafka/connect/history/
+# permissions
+RUN chmod -R 644 /kafka/connect/debezium-connector-sqlserver/*.jar
+RUN chown kafka:kafka -R /kafka/connect/debezium-connector-sqlserver/*.jar
+RUN chown kafka:kafka -R /kafka/connect/history/
 
-# # set work directory
-# WORKDIR /kafka
+# set work directory
+WORKDIR /kafka
 
-# # user: kafka
-# USER kafka
+# user: kafka
+USER kafka

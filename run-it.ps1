@@ -1,1 +1,1 @@
-docker run -it --rm debezium-tutorial-debezium-connect /bin/bash
+docker run -it --rm mrjb-debezium-connect /bin/bash

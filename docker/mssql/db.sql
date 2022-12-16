@@ -17,7 +17,7 @@
 
 
 /*************************************************/
-/*                    [USER]                     */
+/*                    [SETUP]                    */
 /*************************************************/
 
 USE master
@@ -26,37 +26,17 @@ GO
 CREATE LOGIN debezium WITH PASSWORD = 'EE5F5Z2UKSAtJKAM'
 GO
 
-CREATE DATABASE TransactionsDb
+CREATE DATABASE Orders
 GO
 
-USE TransactionsDb
-GO
-
-/*************************************************/
-/*                    [SQL]                      */
-/*************************************************/
-
--- CREATE TABLE [dbo].[Transactions](
---     [ID] [int] IDENTITY(1,1) NOT NULL,
---     [Amount] [decimal](18, 2) NULL
--- )
-
-/*************************************************/
-/*                  [SPROC]                      */
-/*************************************************/
-
-/*************************************************/
-/*                [SIGNALING]                    */
-/*************************************************/
-
-CREATE TABLE debezium_signal (id VARCHAR(42) PRIMARY KEY, type VARCHAR(32) NOT NULL, data VARCHAR(2048) NULL);
+CREATE DATABASE Products
 GO
 
 /*************************************************/
-/*              [TransactionsDb]                 */
+/*             [Database: Orders]                */
 /*************************************************/
 
-USE TransactionsDb
+USE Orders
 GO
 
 CREATE USER debezium FOR LOGIN debezium
@@ -75,14 +55,101 @@ EXEC sys.sp_cdc_enable_db
 GO
 
 /*************************************************/
+/*                   [Tables]                    */
+/*************************************************/
+
+CREATE TABLE [dbo].[Orders](
+	[OrdersId] [int] IDENTITY(1,1) NOT NULL,
+	[CustomerId] [nchar](10) NOT NULL,
+	[Taxes] [decimal](18, 0) NOT NULL,
+	[Subtotal] [decimal](18, 0) NOT NULL,
+	[Total] [decimal](18, 0) NOT NULL,
+	[DateCreated] [datetime2](7) NOT NULL,
+	[DateModified] [datetime2](7) NOT NULL,
+ CONSTRAINT [PK_Transactions] PRIMARY KEY CLUSTERED 
+(
+	[OrdersId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+
+/*************************************************/
+/*                [DEBEZIUM]                     */
+/*************************************************/
+
+CREATE TABLE debezium_signal (id VARCHAR(42) PRIMARY KEY, type VARCHAR(32) NOT NULL, data VARCHAR(2048) NULL);
+GO
+
+
+/*************************************************/
+/*                  [SPROCS]                     */
+/*************************************************/
+
+
+/*************************************************/
 /*                    [CDC]                      */
 /*************************************************/
 
-EXEC sys.sp_cdc_enable_table
+-- EXECUTE sys.sp_cdc_enable_table  
+--     @source_schema = N'dbo'  
+--   , @source_name = N'Transactions'  
+--   , @role_name = N'debezium_role'
+--   , @column_lists = NULL;  
+-- GO  
 
+
+/*************************************************/
+/*             [Database: Products]              */
+/*************************************************/
+
+USE Products
+GO
+
+CREATE USER debezium FOR LOGIN debezium
+GO
+
+CREATE ROLE debezium_role AUTHORIZATION debezium
+GO
+
+EXEC sp_addrolemember 'db_datareader', 'debezium_role'
+GO
+
+EXEC sp_addrolemember 'debezium_role', 'debezium'
+GO
+
+EXEC sys.sp_cdc_enable_db
+GO
+
+/*************************************************/
+/*                   [Tables]                    */
+/*************************************************/
+
+CREATE TABLE [dbo].[OrdersLineItems](
+	[OrdersLineItemId] [int] IDENTITY(1,1) NOT NULL,
+	[OrderId] [int] NOT NULL,
+	[Productid] [int] NOT NULL,
+	[Product] [varchar](200) NOT NULL,
+	[Quantity] [int] NOT NULL,
+	[Total] [decimal](18, 0) NOT NULL,
+	[DateCreated] [datetime2](7) NOT NULL,
+	[DateModified] [datetime2](7) NOT NULL,
+ CONSTRAINT [PK_OrdersLineItems] PRIMARY KEY CLUSTERED 
+(
+	[OrdersLineItemId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[OrdersLineItems]  WITH CHECK ADD  CONSTRAINT [FK_OrdersLineItems_Orders] FOREIGN KEY([OrderId])
+REFERENCES [dbo].[Orders] ([OrdersId])
+GO
+
+ALTER TABLE [dbo].[OrdersLineItems] CHECK CONSTRAINT [FK_OrdersLineItems_Orders]
+GO
 
 /*************************************************/
 /*               [CDC - DISABLE]                 */
 /*************************************************/
 
-EXEC sys.sp_cdc_disable_table N'dbo'
+-- EXEC sys.sp_cdc_disable_table N'dbo'

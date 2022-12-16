@@ -5,11 +5,14 @@ services:
       context: ./docker/mssql
     container_name: mrjb-debezium-mssql
     ports:
-      - "1443:1443"
+      - "1433:1433"
     networks:
       - mrjb-debezium-network
     environment:
       - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=RqrhWH5HmwGc6mEF
+      - MSSQL_PID=Developer
+      - MSSQL_AGENT_ENABLED=true
   zookeeper:
     image: debezium/zookeeper
     container_name: mrjb-debezium-zookeeper

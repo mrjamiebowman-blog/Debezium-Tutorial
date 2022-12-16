@@ -24,8 +24,19 @@ The `debezium` usser password is `EE5F5Z2UKSAtJKAM`
 /*               [CDC - STATUS]                  */
 /*************************************************/
 
-EXEC sys.sp_cdc_help_change_dta_capture
+
+USE [Orders]
+EXEC sp_cdc_help_change_data_capture
 GO
+
+USE [Customers]
+EXEC sp_cdc_help_change_data_capture
+GO
+
+USE [Products]
+EXEC sp_cdc_help_change_data_capture
+GO
+
 
 /*************************************************/
 /*               [CDC - PURGE]                   */

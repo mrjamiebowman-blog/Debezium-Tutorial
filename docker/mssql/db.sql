@@ -26,11 +26,40 @@ GO
 CREATE LOGIN debezium WITH PASSWORD = 'EE5F5Z2UKSAtJKAM'
 GO
 
+CREATE DATABASE Customers
+GO
+
 CREATE DATABASE Orders
 GO
 
 CREATE DATABASE Products
 GO
+
+/*************************************************/
+/*             [Database: Customers]             */
+/*************************************************/
+
+USE Customers
+GO
+
+CREATE USER debezium FOR LOGIN debezium
+GO
+
+CREATE ROLE debezium_role AUTHORIZATION debezium
+GO
+
+EXEC sp_addrolemember 'db_datareader', 'debezium_role'
+GO
+
+EXEC sp_addrolemember 'debezium_role', 'debezium'
+GO
+
+EXEC sys.sp_cdc_enable_db
+GO
+
+/*************************************************/
+/*                   [Tables]                    */
+/*************************************************/
 
 /*************************************************/
 /*             [Database: Orders]                */

@@ -15,7 +15,6 @@ ARG KEYSTORE_PASSWORD=keystorepassword
 ARG TRUSTSTORE_PASSWORD=truststorepassword
 ARG CA_PASSWORD=capassword
 
-
 #####################################################
 #                     UBUNTU                        #
 #####################################################
@@ -35,7 +34,14 @@ RUN openssl req -new -x509 -keyout ca-key -out ca-cert -days 365 -passout pass:$
 RUN keytool -importcert -keystore truststore.jks -alias CaRoot -file ca-cert -noprompt -storepass ${KEYSTORE_PASSWORD}
 
 # export the cert, sign it, restore it
+RUN keytool -certreq -keystore keystore.jks -alias localhost -file cert-file -storepass ${KEYSTORE_PASSWORD}
 
+# sign cert with ca
+RUN openssl x509 -req -CA ca-cert -CAkey ca-key -in cert-file -out cert-signed -days 365 -CAcreateserial -passin pass:${CA_PASSWORD}
+
+#  import
+RUN keytool -importcert -keystore keystore.jks -alias CaRoot -file ca-cert -noprompt -storepass ${KEYSTORE_PASSWORD}
+RUN keytool -importcert -keystore keystore.jks -alias localhost -file cert-signed -noprompt -storepass ${KEYSTORE_PASSWORD}
 
 #####################################################
 #                     DEBEZIUM                      #
@@ -56,9 +62,15 @@ COPY debezium_jaas.conf .
 RUN chown kafka:kafka debezium_jaas.conf connect.password
 
 # keystores
-# COPY --from=ubuntu --chown=kafka:kafka /keystore/*.jks /keystore/
+COPY --from=ubuntu --chown=kafka:kafka /keystores/*.jks /keystores/
+
+# permissions
+RUN chmod -R 644 /kafka/connect/debezium-connector-sqlserver/*.jar
+RUN chown kafka:kafka -R /kafka/connect/debezium-connector-sqlserver/*.jar
+RUN chown kafka:kafka -R /kafka/connect/history/
 
 # set work directory
 WORKDIR /kafka
 
+# user: kafka
 USER kafka

@@ -73,6 +73,28 @@ CREATE TABLE [dbo].[Orders](
 ) ON [PRIMARY]
 GO
 
+CREATE TABLE [dbo].[OrdersLineItems](
+	[OrdersLineItemId] [int] IDENTITY(1,1) NOT NULL,
+	[OrderId] [int] NOT NULL,
+	[Productid] [int] NOT NULL,
+	[Product] [varchar](200) NOT NULL,
+	[Quantity] [int] NOT NULL,
+	[Total] [decimal](18, 0) NOT NULL,
+	[DateCreated] [datetime2](7) NOT NULL,
+	[DateModified] [datetime2](7) NOT NULL,
+ CONSTRAINT [PK_OrdersLineItems] PRIMARY KEY CLUSTERED 
+(
+	[OrdersLineItemId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[OrdersLineItems]  WITH CHECK ADD  CONSTRAINT [FK_OrdersLineItems_Orders] FOREIGN KEY([OrderId])
+REFERENCES [dbo].[Orders] ([OrdersId])
+GO
+
+ALTER TABLE [dbo].[OrdersLineItems] CHECK CONSTRAINT [FK_OrdersLineItems_Orders]
+GO
 
 /*************************************************/
 /*                [DEBEZIUM]                     */
@@ -125,27 +147,18 @@ GO
 /*                   [Tables]                    */
 /*************************************************/
 
-CREATE TABLE [dbo].[OrdersLineItems](
-	[OrdersLineItemId] [int] IDENTITY(1,1) NOT NULL,
-	[OrderId] [int] NOT NULL,
-	[Productid] [int] NOT NULL,
-	[Product] [varchar](200) NOT NULL,
-	[Quantity] [int] NOT NULL,
-	[Total] [decimal](18, 0) NOT NULL,
+CREATE TABLE [dbo].[Products](
+	[ProductId] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [varchar](200) NOT NULL,
+	[Description] [varchar](500) NOT NULL,
+	[Price] [decimal](18, 0) NOT NULL,
 	[DateCreated] [datetime2](7) NOT NULL,
 	[DateModified] [datetime2](7) NOT NULL,
- CONSTRAINT [PK_OrdersLineItems] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_Products] PRIMARY KEY CLUSTERED 
 (
-	[OrdersLineItemId] ASC
+	[ProductId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
-GO
-
-ALTER TABLE [dbo].[OrdersLineItems]  WITH CHECK ADD  CONSTRAINT [FK_OrdersLineItems_Orders] FOREIGN KEY([OrderId])
-REFERENCES [dbo].[Orders] ([OrdersId])
-GO
-
-ALTER TABLE [dbo].[OrdersLineItems] CHECK CONSTRAINT [FK_OrdersLineItems_Orders]
 GO
 
 /*************************************************/

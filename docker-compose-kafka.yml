@@ -37,6 +37,10 @@ services:
     build:
       context: ./docker/connect/
       dockerfile: Dockerfile
+      args:
+        - KEYSTORE_PASSWORD=${KEY_PASSWORD}
+        - TRUSTSTORE_PASSWORD=${TRUSTSTORE_PASSWORD}
+        - KEY_PASSWORD=${KEY_PASSWORD}
     container_name: mrjb-debezium-connect
     ports:
       - 8083:8083

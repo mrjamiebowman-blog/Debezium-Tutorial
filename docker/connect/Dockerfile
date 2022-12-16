@@ -4,17 +4,11 @@
 # could be set up.
 
 #####################################################
-#                     ARGUMENTS                     #
-#####################################################
-
-ARG UBUNTU_VERSION=23.04 as ubuntu
-ARG DEBEZIUM_VERSION=1.9
-
-#####################################################
 #                     UBUNTU                        #
 #####################################################
 
-FROM ubuntu:$UBUNTU_VERSION
+ARG UBUNTU_VERSION=23.04
+FROM ubuntu:$UBUNTU_VERSION as ssl
 
 # self-signed certificate
 ARG KEYSTORE_PASSWORD=keystorepassword
@@ -53,7 +47,8 @@ RUN keytool -importcert -keystore keystore.jks -alias localhost -file cert-signe
 #                     DEBEZIUM                      #
 #####################################################
 
-FROM debezium/connect:$DEBEZIUM_VERSION
+ARG DEBEZIUM_VERSION=1.9
+FROM debezium/connect:1.9
 USER root
 
 # copy plugins
@@ -69,7 +64,10 @@ RUN chown kafka:kafka debezium_jaas.conf connect.password
 
 # keystores
 RUN mkdir -p /keystores
-COPY --from=ubuntu --chown=kafka:kafka /keystores/*.jks /keystores/
+COPY --from=ssl --chown=kafka:kafka /keystores/*.jks /keystores/
+
+# history folder
+RUN mkdir -p /kafka/connect/history/
 
 # permissions
 RUN chmod -R 644 /kafka/connect/debezium-connector-sqlserver/*.jar

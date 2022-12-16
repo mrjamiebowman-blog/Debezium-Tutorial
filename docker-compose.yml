@@ -5,7 +5,14 @@ services:
       context: ./docker/mssql
     container_name: mrjb-debezium-mssql
     ports:
-      - "1443:1443"
+      - "1433:1433"
+    networks:
+      - mrjb-debezium-network
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=RqrhWH5HmwGc6mEF
+      - MSSQL_PID=Developer
+      - MSSQL_AGENT_ENABLED=true
   zookeeper:
     image: debezium/zookeeper
     container_name: mrjb-debezium-zookeeper
@@ -13,27 +20,36 @@ services:
      - 2181:2181
      - 2888:2888
      - 3888:3888
+    networks:
+      - mrjb-debezium-network
   kafka:
     image: debezium/kafka
-    container_name: mrjb-debezium-kafka    
+    container_name: mrjb-debezium-kafka
     ports:
      - 9092:9092
     links:
      - zookeeper
+    networks:
+      - mrjb-debezium-network
     environment:
      - ZOOKEEPER_CONNECT=zookeeper:2181
   debezium-connect:
-    build:
+    # image: mrjb/debezium-connect:${DEBEZIUM_VERSION}
+    build:      
       context: ./docker/connect/
       dockerfile: Dockerfile
-    image: mrjb-debezium-connect
+      args:
+        - DEBEZIUM_VERSION=${DEBEZIUM_VERSION}
+        - KEYSTORE_PASSWORD=${KEY_PASSWORD}
+        - TRUSTSTORE_PASSWORD=${TRUSTSTORE_PASSWORD}
+        - KEY_PASSWORD=${KEY_PASSWORD}
     container_name: mrjb-debezium-connect
     ports:
       - 8083:8083
+      - 8084:8084
     depends_on:
       - kafka
-      - mssql
-      - zookeeper
+    # restarts: on-failure
     networks:
       - mrjb-debezium-network
     environment:
@@ -42,6 +58,21 @@ services:
       - CONFIG_STORAGE_TOPIC=debezium-configs
       - OFFSET_STORAGE_TOPIC=debezium-offsets
       - STATUS_STORAGE_TOPIC=debezium-statuses
+      # ssl
+      - CONNECT_LISTENERS=http://0.0.0.0:8083,https://0.0.0.0:8084
+      - CONNECT_LISTENERS_HTTPS_SSL_ENABLE_PROTOCOL=TLSv1.2
+      - CONNECT_LISTENERS_HTTPS_SSL_KEY_PASSWORD=${KEY_PASSWORD}
+      - CONNECT_LISTENERS_HTTPS_SSL_KEYSTORE_LOCATION=/keystores/keystore.jks
+      - CONNECT_LISTENERS_HTTPS_SSL_KEYSTORE_PASSWORD=${KEYSTORE_PASSWORD}
+      - CONNECT_LISTENERS_HTTPS_SSL_TRUSTSTORE_LOCATION=/keystores/truststore.jks
+      - CONNECT_LISTENERS_HTTPS_SSL_TRUSTSTORE_PASSWORD=${TRUSTSTORE_PASSWORD}
+      # basic auth
+      - CONNECT_REST_EXTENSION_CLASSES=org.apache.kafka.connect.rest.basic.auth.extension.BasicAuthSecurityRestExtension
+      - KAFKA_OPTS=-Djava.security.auth.login.config=/kafka/config/debezium_jaas.conf
+      # log level
+      - LOG_LEVEL=ERROR
+    volumes:
+     - ./history:/kafka/connect/history/ # windows
   debezium-ui:
     image: debezium/debezium-ui
     container_name: mrjb-debezium-ui

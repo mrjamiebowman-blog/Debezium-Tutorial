@@ -24,9 +24,19 @@ The `debezium` usser password is `EE5F5Z2UKSAtJKAM`
 /*               [CDC - STATUS]                  */
 /*************************************************/
 
-```
+EXEC sys.sp_cdc_help_change_dta_capture
+GO
 
-```sql
+/*************************************************/
+/*               [CDC - PURGE]                   */
+/*************************************************/
+
+DECLARE @max_lsn_binary(10) = sys.fn_cdc_get_max_lsn();
+
+EXEC sys.sp_cdc_cleanup_change_table
+    @capture_instance = N'dbo_orders',
+    @low_water_mark = @max_lsn;
+GO
 
 /*************************************************/
 /*               [CDC - DISABLE]                 */

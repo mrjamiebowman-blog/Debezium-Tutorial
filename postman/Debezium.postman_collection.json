@@ -18,6 +18,15 @@
 					"request": {
 						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"orders\", \r\n    \"config\": {\r\n        \"connector.class\": \"io.debezium.connector.sqlserver.SqlServerConnector\", \r\n        \"database.hostname\": \"mssql\", \r\n        \"database.port\": \"1433\", \r\n        \"database.user\": \"sa\", \r\n        \"database.password\": \"RqrhWH5HmwGc6mEF\", \r\n        \"database.names\": \"Orders\",\r\n        \"database.server.name\": \"mssql\",\r\n        \"topic.prefix\": \"mrjb\", \r\n        \"table.include.list\": \"dbo.orders\", \r\n        \"database.history.kafka.bootstrap.servers\": \"kafka:9092\",\r\n        \"database.history.kafka.topic\": \"history.orders\",\r\n        \"schema.history.internal.kafka.bootstrap.servers\": \"kafka:9092\", \r\n        \"schema.history.internal.kafka.topic\": \"schemahistory.orders\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "{{DebeziumUrl}}/connectors",
 							"host": [
@@ -39,6 +48,35 @@
 							"raw": "{{DebeziumUrl}}",
 							"host": [
 								"{{DebeziumUrl}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Orders - Validate",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"orders-connector\", \r\n    \"connector.class\": \"io.debezium.connector.sqlserver.SqlServerConnector\", \r\n    \"database.hostname\": \"mssql\", \r\n    \"database.port\": \"1433\", \r\n    \"database.user\": \"sa\", \r\n    \"database.password\": \"RqrhWH5HmwGc6mEF\", \r\n    \"database.names\": \"Orders\",\r\n    \"database.server.name\": \"mssql\",\r\n    \"topic.prefix\": \"mrjb\", \r\n    \"table.include.list\": \"dbo.orders\", \r\n    \"database.history.kafka.bootstrap.servers\": \"kafka:9092\",\r\n    \"database.history.kafka.topic\": \"history.orders\",\r\n    \"schema.history.internal.kafka.bootstrap.servers\": \"kafka:9092\", \r\n    \"schema.history.internal.kafka.topic\": \"schemahistory.orders\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{DebeziumUrl}}/connector-plugins/SqlServerConnector/config/validate",
+							"host": [
+								"{{DebeziumUrl}}"
+							],
+							"path": [
+								"connector-plugins",
+								"SqlServerConnector",
+								"config",
+								"validate"
 							]
 						}
 					},

@@ -82,7 +82,7 @@ EXECUTE sys.sp_cdc_enable_table
   , @source_name = N'Customers'  
   , @role_name = N'debezium_role'
   , @captured_column_list = NULL;  
-GO  
+GO
 
 /*************************************************/
 /*             [Database: Orders]                */
@@ -141,8 +141,7 @@ CREATE TABLE [dbo].[OrdersLineItems](
 ) ON [PRIMARY]
 GO
 
-ALTER TABLE [dbo].[OrdersLineItems]  WITH CHECK ADD  CONSTRAINT [FK_OrdersLineItems_Orders] FOREIGN KEY([OrderId])
-REFERENCES [dbo].[Orders] ([OrdersId])
+ALTER TABLE [dbo].[OrdersLineItems]  WITH CHECK ADD  CONSTRAINT [FK_OrdersLineItems_Orders] FOREIGN KEY([OrderId]) REFERENCES [dbo].[Orders] ([OrdersId])
 GO
 
 ALTER TABLE [dbo].[OrdersLineItems] CHECK CONSTRAINT [FK_OrdersLineItems_Orders]
@@ -264,12 +263,11 @@ GO
 USE [Orders]
 GO
 
-DECLARE @ORDERID INT = NULL
-
 INSERT INTO [dbo].[Orders] ([CustomerId], [Taxes], [Subtotal], [Total], [DateCreated], [DateModified]) VALUES (1, 5, 14.99, 19.99, GETDATE(), GETDATE())
 GO
 
-SET @ORDERID = SELECT SCOPE_IDENTITY()
+DECLARE @ORDERID INT = NULL
+SET @ORDERID = SCOPE_IDENTITY()
 
 /*************************************************/
 /*           	[DATA: ORDER ITEMS]       	     */

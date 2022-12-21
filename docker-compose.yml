@@ -25,7 +25,7 @@ services:
   kafka:
     image: ubuntu/kafka
     container_name: mrjb-debezium-kafka
-    # command: kafka-server-start.sh /etc/kafka/server.properties --override zookeeper.connect=host.docker.internal:2181
+    command: /opt/kafka/bin/kafka-server-start.sh /etc/kafka/server.properties --override zookeeper.connect=host.docker.internal:2181
     ports:
      - 9092:9092
     depends_on:

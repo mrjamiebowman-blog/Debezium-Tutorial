@@ -47,8 +47,8 @@ RUN keytool -importcert -keystore keystore.jks -alias localhost -file cert-signe
 #                     DEBEZIUM                      #
 #####################################################
 
-ARG DEBEZIUM_VERSION=1.9
-FROM debezium/connect:1.9
+ARG DEBEZIUM_VERSION=2.0
+FROM debezium/connect:2.0
 USER root
 
 # copy plugins

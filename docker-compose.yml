@@ -13,28 +13,31 @@ services:
       - MSSQL_SA_PASSWORD=RqrhWH5HmwGc6mEF
       - MSSQL_PID=Developer
       - MSSQL_AGENT_ENABLED=true
-  zookeeper:
-    image: debezium/zookeeper
-    container_name: mrjb-debezium-zookeeper
-    ports:
-     - 2181:2181
-     - 2888:2888
-     - 3888:3888
-    networks:
-      - mrjb-debezium-network
+  # zookeeper:
+  #   image: debezium/zookeeper
+  #   container_name: mrjb-debezium-zookeeper
+  #   ports:
+  #    - 2181:2181
+  #    - 2888:2888
+  #    - 3888:3888
+  #   networks:
+  #     - mrjb-debezium-network
   kafka:
-    image: debezium/kafka
+    image: ubuntu/kafka
     container_name: mrjb-debezium-kafka
     ports:
      - 9092:9092
-    links:
-     - zookeeper
-    depends_on:
-      - zookeeper
+     - 2181:2181
+     - 2888:2888
+     - 3888:3888
+    # links:
+    #  - zookeeper
+    # depends_on:
+    #   - zookeeper
     networks:
       - mrjb-debezium-network
     environment:
-     - ZOOKEEPER_CONNECT=zookeeper:2181
+     - ZOOKEEPER_HOST=zookeeper:2181 # host.docker.internal
   debezium-connect:
     # image: mrjb/debezium-connect:${DEBEZIUM_VERSION}
     build:      
@@ -52,7 +55,6 @@ services:
     depends_on:
       - kafka
       - mssql
-      - zookeeper
     # restarts: on-failure
     networks:
       - mrjb-debezium-network
@@ -88,7 +90,6 @@ services:
       - debezium-connect
       - kafka
       - mssql
-      - zookeeper      
     networks:
       - mrjb-debezium-network
 networks:

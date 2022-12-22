@@ -14,6 +14,16 @@ services:
       - MSSQL_PID=Developer
       - MSSQL_AGENT_ENABLED=true
 
+  # debug image
+  ubuntu-kafka:
+    build:
+      context: ./docker/ubuntu-kafka
+    container_name: mrjb-debezium-ubuntu-kafka
+    # networks:
+    #   - mrjb-debezium-network
+    environment:
+      - TZ=UTC
+      - ZOOKEEPER_HOST=host.docker.internal
   zookeeper:
     image: confluentinc/cp-zookeeper:7.3.1
     hostname: zookeeper

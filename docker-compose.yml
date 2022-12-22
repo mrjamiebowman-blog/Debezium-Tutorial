@@ -70,6 +70,9 @@ services:
     depends_on:
       - kafka
       - mssql
+    links:
+      - zookeeper:zookeeper
+      - kafka:kafka
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost"]
       interval: 1m30s

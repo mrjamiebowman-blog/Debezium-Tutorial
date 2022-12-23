@@ -66,7 +66,6 @@ services:
       # disable auto create topics - https://debezium.io/documentation/reference/stable/configuration/topic-auto-create-config.html#disabling-automatic-topic-creation-for-the-kafka-broker
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'false'
 
-
   debezium-connect:
     # image: mrjb/debezium-connect:${DEBEZIUM_VERSION}
     build:      
@@ -88,7 +87,10 @@ services:
       - zookeeper:zookeeper
       - kafka:kafka
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost"]
+      # test
+      test: 'curl -k -f -H "Accept:application/json" http://127.0.0.1:8083'
+      # test: basic auth
+      # test: 'curl -k -f -u ${DEBEZIUM_USER}:${DEBEZIUM_PASSWORD} -H "Accept:application/json" https://127.0.0.1:8084'
       interval: 1m30s
       timeout: 10s
       retries: 3

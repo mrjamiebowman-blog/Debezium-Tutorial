@@ -98,7 +98,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"orders\", \r\n    \"config\": {\r\n        \"connector.class\": \"io.debezium.connector.sqlserver.SqlServerConnector\", \r\n        \"database.hostname\": \"mssql\", \r\n        \"database.port\": \"1433\", \r\n        \"database.user\": \"sa\", \r\n        \"database.password\": \"RqrhWH5HmwGc6mEF\",\r\n        \"database.names\": \"Orders\",\r\n        \"database.server.name\": \"mssql\",\r\n        \"database.encrypt\": \"false\",\r\n        \"topic.prefix\": \"mrjb\", \r\n        \"table.include.list\": \"dbo.Orders\", \r\n        \"database.history.kafka.bootstrap.servers\": \"kafka:29092\",\r\n        \"database.history.kafka.topic\": \"history.orders\",\r\n        \"schema.history.internal.kafka.bootstrap.servers\": \"kafka:29092\", \r\n        \"schema.history.internal.kafka.topic\": \"schemahistory.orders\"\r\n    }\r\n}",
+							"raw": "{\r\n    \"name\": \"orders\", \r\n    \"config\": {\r\n        \"connector.class\": \"io.debezium.connector.sqlserver.SqlServerConnector\", \r\n        \"database.hostname\": \"mssql\", \r\n        \"database.port\": \"1433\", \r\n        \"database.user\": \"sa\", \r\n        \"database.password\": \"RqrhWH5HmwGc6mEF\",\r\n        \"database.names\": \"Orders\",\r\n        \"database.server.name\": \"mssql\",\r\n        \"database.encrypt\": \"false\",\r\n        \"topic.prefix\": \"mrjb\", \r\n        \"table.include.list\": \"dbo.Orders\",\r\n        \"database.history.kafka.bootstrap.servers\": \"kafka:29092\",\r\n        \"database.history.kafka.topic\": \"history.orders\",\r\n        \"schema.history.internal.kafka.bootstrap.servers\": \"kafka:29092\",\r\n        \"schema.history.internal.kafka.topic\": \"schemahistory.orders\",\r\n        \"transforms\": \"Reroute\",\r\n        \"transforms.Reroute.type\": \"io.debezium.transforms.ByLogicalTableRouter\",\r\n        \"transforms.Reroute.topic.regex\": \"(.*)\",\r\n        \"transforms.Reroute.topic.replacement\": \"orders\"\r\n    }\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -124,7 +124,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"orders\", \r\n    \"config\": {\r\n        \"connector.class\": \"io.debezium.connector.sqlserver.SqlServerConnector\", \r\n        \"database.hostname\": \"mssql\", \r\n        \"database.port\": \"1433\", \r\n        \"database.user\": \"sa\", \r\n        \"database.password\": \"RqrhWH5HmwGc6mEF\",\r\n        \"database.names\": \"Orders\",\r\n        \"database.server.name\": \"mssql\",\r\n        \"database.encrypt\": \"false\",\r\n        \"topic.prefix\": \"mrjb\", \r\n        \"table.include.list\": \"dbo.Orders\", \r\n        \"database.history.kafka.bootstrap.servers\": \"kafka:29092\",\r\n        \"database.history.kafka.topic\": \"history.orders\",\r\n        \"schema.history.internal.kafka.bootstrap.servers\": \"kafka:29092\", \r\n        \"schema.history.internal.kafka.topic\": \"schemahistory.orders\"\r\n    }\r\n}",
+							"raw": "{\r\n    \"name\": \"orders\", \r\n    \"config\": {\r\n        \"connector.class\": \"io.debezium.connector.sqlserver.SqlServerConnector\", \r\n        \"database.hostname\": \"mssql\", \r\n        \"database.port\": \"1433\", \r\n        \"database.user\": \"sa\", \r\n        \"database.password\": \"RqrhWH5HmwGc6mEF\",\r\n        \"database.names\": \"Orders\",\r\n        \"database.server.name\": \"mssql\",\r\n        \"database.encrypt\": \"false\",\r\n        \"topic.prefix\": \"mrjb\", \r\n        \"table.include.list\": \"dbo.Orders\", \r\n        \"database.history.kafka.bootstrap.servers\": \"kafka:29092\",\r\n        \"database.history.kafka.topic\": \"history.orders\",\r\n        \"schema.history.internal.kafka.bootstrap.servers\": \"kafka:29092\", \r\n        \"schema.history.internal.kafka.topic\": \"schemahistory.orders\",\r\n        \"transforms\": \"Reroute,Filter\",\r\n        \"transforms.Reroute.type\": \"io.debezium.transforms.ByLogicalTableRouter\",\r\n        \"transforms.Reroute.topic.regex\": \"(.*)\",\r\n        \"transforms.Reroute.topic.replacement\": \"orders-filtered\",\r\n        \"transforms.Filter.language\": \"jsr223.groovy\",\r\n        \"transforms.Filter.type\": \"io.debezium.transforms.Filter\",\r\n        \"transforms.Filter.condition\": \"(value.source.table == 'orders') && (value.before != null && value.before.customerId == 1) || (value.after != null && value.after.customerId == 1)\"\r\n    }\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -149,9 +149,13 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{DebeziumUrl}}",
+							"raw": "{{DebeziumUrl}}/connectors/orders",
 							"host": [
 								"{{DebeziumUrl}}"
+							],
+							"path": [
+								"connectors",
+								"orders"
 							]
 						}
 					},

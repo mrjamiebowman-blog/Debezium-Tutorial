@@ -24,6 +24,7 @@ services:
     environment:
       - TZ=UTC
       - ZOOKEEPER_HOST=host.docker.internal
+      - KAFKA_BROKER_ID=2
   zookeeper:
     image: confluentinc/cp-zookeeper:7.3.1
     hostname: zookeeper
@@ -62,6 +63,9 @@ services:
       CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
       CONFLUENT_METRICS_ENABLE: 'true'
       CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
+      # disable auto create topics - https://debezium.io/documentation/reference/stable/configuration/topic-auto-create-config.html#disabling-automatic-topic-creation-for-the-kafka-broker
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: false
+
 
   debezium-connect:
     # image: mrjb/debezium-connect:${DEBEZIUM_VERSION}
@@ -91,11 +95,14 @@ services:
       start_period: 40s      
     # restarts: on-failure
     environment:
-      - BOOTSTRAP_SERVERS=kafka:9092
+      - BOOTSTRAP_SERVERS=kafka:29092
       - GROUP_ID=1
+      # topics
+      # - CONNECT_AUTO_CREATE_TOPICS=true
+      - CONNECT_TOPIC_CREATION_ENABLE=true
       - CONFIG_STORAGE_TOPIC=debezium-configs
       - OFFSET_STORAGE_TOPIC=debezium-offsets
-      - STATUS_STORAGE_TOPIC=debezium-statuses
+      - STATUS_STORAGE_TOPIC=debezium-statuses      
       # # ssl
       # - CONNECT_LISTENERS=http://0.0.0.0:8083,https://0.0.0.0:8084
       # - CONNECT_LISTENERS_HTTPS_SSL_ENABLE_PROTOCOL=TLSv1.2
@@ -125,6 +132,42 @@ services:
       - mssql
     # networks:
     #   - mrjb-debezium-network
+
+
+  # ksqldb-server:
+  #   image: confluentinc/cp-ksqldb-server:7.3.1
+  #   hostname: ksqldb-server
+  #   container_name: ksqldb-server
+  #   depends_on:
+  #     - kafka
+  #     - connect
+  #   ports:
+  #     - "8088:8088"
+  #   environment:
+  #     KSQL_CONFIG_DIR: "/etc/ksql"
+  #     KSQL_BOOTSTRAP_SERVERS: "kafka:29092"
+  #     KSQL_HOST_NAME: ksqldb-server
+  #     KSQL_LISTENERS: "http://0.0.0.0:8088"
+  #     KSQL_CACHE_MAX_BYTES_BUFFERING: 0
+  #     KSQL_KSQL_SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
+  #     KSQL_PRODUCER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor"
+  #     KSQL_CONSUMER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor"
+  #     KSQL_KSQL_CONNECT_URL: "http://connect:8083"
+  #     KSQL_KSQL_LOGGING_PROCESSING_TOPIC_REPLICATION_FACTOR: 1
+  #     KSQL_KSQL_LOGGING_PROCESSING_TOPIC_AUTO_CREATE: 'true'
+  #     KSQL_KSQL_LOGGING_PROCESSING_STREAM_AUTO_CREATE: 'true'
+
+  # ksqldb-cli:
+  #   image: confluentinc/cp-ksqldb-cli:7.3.1
+  #   container_name: ksqldb-cli
+  #   depends_on:
+  #     - kafka
+  #     - connect
+  #     - ksqldb-server
+  #   entrypoint: /bin/sh
+  #   tty: true
+
+
 # networks:
 #   mrjb-debezium-network:
 

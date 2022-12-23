@@ -64,7 +64,7 @@ services:
       CONFLUENT_METRICS_ENABLE: 'true'
       CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
       # disable auto create topics - https://debezium.io/documentation/reference/stable/configuration/topic-auto-create-config.html#disabling-automatic-topic-creation-for-the-kafka-broker
-      KAFKA_AUTO_CREATE_TOPICS_ENABLE: false
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'false'
 
 
   debezium-connect:

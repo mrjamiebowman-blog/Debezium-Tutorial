@@ -111,7 +111,7 @@ GO
 /*************************************************/
 
 CREATE TABLE [dbo].[Orders](
-	[OrdersId] [int] IDENTITY(1,1) NOT NULL,
+	[OrderId] [int] IDENTITY(1,1) NOT NULL,
 	[CustomerId] [nchar](10) NOT NULL,
 	[Taxes] [decimal](18, 2) NOT NULL,
 	[Subtotal] [decimal](18, 2) NOT NULL,
@@ -120,7 +120,7 @@ CREATE TABLE [dbo].[Orders](
 	[DateModified] [datetime2](7) NOT NULL,
  CONSTRAINT [PK_Transactions] PRIMARY KEY CLUSTERED 
 (
-	[OrdersId] ASC
+	[OrderId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -141,7 +141,7 @@ CREATE TABLE [dbo].[OrdersLineItems](
 ) ON [PRIMARY]
 GO
 
-ALTER TABLE [dbo].[OrdersLineItems]  WITH CHECK ADD  CONSTRAINT [FK_OrdersLineItems_Orders] FOREIGN KEY([OrderId]) REFERENCES [dbo].[Orders] ([OrdersId])
+ALTER TABLE [dbo].[OrdersLineItems]  WITH CHECK ADD  CONSTRAINT [FK_OrdersLineItems_Orders] FOREIGN KEY([OrderId]) REFERENCES [dbo].[Orders] ([OrderId])
 GO
 
 ALTER TABLE [dbo].[OrdersLineItems] CHECK CONSTRAINT [FK_OrdersLineItems_Orders]

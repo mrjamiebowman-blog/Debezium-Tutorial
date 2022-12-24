@@ -131,7 +131,7 @@ CREATE TABLE [dbo].[OrdersLineItems](
 	[Productid] [int] NOT NULL,
 	[Product] [varchar](200) NOT NULL,
 	[Quantity] [int] NOT NULL,
-	[Total] [decimal](18, 0) NOT NULL,
+	[Total] [decimal](18, 2) NOT NULL,
 	[DateCreated] [datetime2](7) NOT NULL,
 	[DateModified] [datetime2](7) NOT NULL,
  CONSTRAINT [PK_OrdersLineItems] PRIMARY KEY CLUSTERED 

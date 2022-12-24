@@ -113,9 +113,9 @@ GO
 CREATE TABLE [dbo].[Orders](
 	[OrdersId] [int] IDENTITY(1,1) NOT NULL,
 	[CustomerId] [nchar](10) NOT NULL,
-	[Taxes] [decimal](18, 0) NOT NULL,
-	[Subtotal] [decimal](18, 0) NOT NULL,
-	[Total] [decimal](18, 0) NOT NULL,
+	[Taxes] [decimal](18, 2) NOT NULL,
+	[Subtotal] [decimal](18, 2) NOT NULL,
+	[Total] [decimal](18, 2) NOT NULL,
 	[DateCreated] [datetime2](7) NOT NULL,
 	[DateModified] [datetime2](7) NOT NULL,
  CONSTRAINT [PK_Transactions] PRIMARY KEY CLUSTERED 

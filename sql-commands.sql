@@ -8,3 +8,4 @@ UPDATE  [Orders].[dbo].[OrdersLineItems] SET Total = @AMOUNT WHERE OrderId = @Or
 
 SELECT * FROM [dbo].[Orders]
 SELECT * FROM [dbo].[OrdersLineItems]
+

@@ -19,6 +19,8 @@ The administrative `sa` password is `RqrhWH5HmwGc6mEF`
 
 The `debezium` usser password is `EE5F5Z2UKSAtJKAM`   
 
+## Debezium Password
+`docker exec mrjb-debezium-connect cat /kafka/config/connect.password`
 
 ## CDC Troubleshooting
 

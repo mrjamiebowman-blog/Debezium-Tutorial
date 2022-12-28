@@ -32,8 +32,8 @@ The Docker image will auto-generate a password for the user `debeziumuser`. To g
 `docker inspect --format "{{json .State.Health }}" mrjb-debezium-connect | jq`   
 
 ## Debugging Keystores
-`keytool -list -v keystore keystore.jks -storepass {KEYSTORE_PASSWORD}`   
-`keytool -list -v keystore truststore.jks -storepass {TRUSTSTORE_PASSWORD}`   
+`keytool -list -v -keystore keystore.jks -storepass {KEYSTORE_PASSWORD}`   
+`keytool -list -v -keystore truststore.jks -storepass {TRUSTSTORE_PASSWORD}`   
 
 ## CDC Troubleshooting
 

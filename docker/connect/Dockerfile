@@ -47,8 +47,8 @@ RUN keytool -importcert -keystore keystore.jks -alias localhost -file cert-signe
 #                     DEBEZIUM                      #
 #####################################################
 
-ARG DEBEZIUM_VERSION=2.0
-FROM debezium/connect:2.0
+ARG DEBEZIUM_VERSION=2.1
+FROM debezium/connect:2.1
 USER root
 
 # copy plugins
@@ -58,7 +58,7 @@ RUN chown kafka:kafka -R /kafka/connect/debezium-connector-sqlserver/*.jar
 
 # basic authentication
 WORKDIR /kafka/config
-COPY connect.password .
+RUN touch connect.password
 COPY debezium_jaas.conf .
 RUN chown kafka:kafka debezium_jaas.conf connect.password
 
@@ -76,6 +76,12 @@ RUN chown kafka:kafka -R /kafka/connect/history/
 
 # set work directory
 WORKDIR /kafka
+COPY mrjb-entrypoint.sh /
+RUN chmod +x /mrjb-entrypoint.sh
+RUN chown kafka:kafka /mrjb-entrypoint.sh
 
 # user: kafka
 USER kafka
+
+# entrypoint
+ENTRYPOINT [ "/mrjb-entrypoint.sh" ]

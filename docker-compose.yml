@@ -67,6 +67,8 @@ services:
     build:      
       context: ./docker/connect/
       dockerfile: Dockerfile
+      tags:
+        - mrjb/debezium-connect:latest
       args:
         - DEBEZIUM_VERSION=${DEBEZIUM_VERSION}
         - KEYSTORE_PASSWORD=${KEY_PASSWORD}

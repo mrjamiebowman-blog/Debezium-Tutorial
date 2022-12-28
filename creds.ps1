@@ -1,0 +1,1 @@
+docker exec mrjb-debezium-connect cat /kafka/config/connect.password

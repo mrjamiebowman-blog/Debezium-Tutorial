@@ -24,6 +24,9 @@ The Docker image will auto-generate a password for the user `debeziumuser`. To g
 
 `docker exec mrjb-debezium-connect cat /kafka/config/connect.password`
 
+## Debezium Health Checks
+`docker inspect --format "{{json .State.Health }}" mrjb-debezium-connect | jq`   
+
 ## CDC Troubleshooting
 
 ```sql

@@ -31,7 +31,7 @@ RUN keytool -genkey -keystore keystore.jks -alias localhost -keyalg RSA -validit
 RUN openssl req -new -x509 -keyout ca-key -out ca-cert -days 365 -passout pass:${CA_PASSWORD} -subj "/C=US/ST=Missouri/L=St.Louis/D=Blog/OU=Dev/CN=localhost"
 
 # import into keystore
-RUN keytool -importcert -keystore truststore.jks -alias CaRoot -file ca-cert -noprompt -storepass ${KEYSTORE_PASSWORD}
+RUN keytool -importcert -keystore truststore.jks -alias CaRoot -file ca-cert -noprompt -storepass ${TRUSTSTORE_PASSWORD}
 
 # export the cert, sign it, restore it
 RUN keytool -certreq -keystore keystore.jks -alias localhost -file cert-file -storepass ${KEYSTORE_PASSWORD}

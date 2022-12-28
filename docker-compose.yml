@@ -6,8 +6,6 @@ services:
     container_name: mrjb-debezium-mssql
     ports:
       - "1433:1433"
-    # networks:
-    #   - mrjb-debezium-network
     environment:
       - ACCEPT_EULA=Y
       - MSSQL_SA_PASSWORD=RqrhWH5HmwGc6mEF
@@ -19,8 +17,6 @@ services:
     build:
       context: ./docker/ubuntu-kafka
     container_name: mrjb-debezium-ubuntu-kafka
-    # networks:
-    #   - mrjb-debezium-network
     environment:
       - TZ=UTC
       - ZOOKEEPER_HOST=zookeeper
@@ -103,17 +99,17 @@ services:
       - CONFIG_STORAGE_TOPIC=debezium-configs
       - OFFSET_STORAGE_TOPIC=debezium-offsets
       - STATUS_STORAGE_TOPIC=debezium-statuses      
-      # # ssl
-      # - CONNECT_LISTENERS=http://0.0.0.0:8083,https://0.0.0.0:8084
-      # - CONNECT_LISTENERS_HTTPS_SSL_ENABLE_PROTOCOL=TLSv1.2
-      # - CONNECT_LISTENERS_HTTPS_SSL_KEY_PASSWORD=${KEY_PASSWORD}
-      # - CONNECT_LISTENERS_HTTPS_SSL_KEYSTORE_LOCATION=/keystores/keystore.jks
-      # - CONNECT_LISTENERS_HTTPS_SSL_KEYSTORE_PASSWORD=${KEYSTORE_PASSWORD}
-      # - CONNECT_LISTENERS_HTTPS_SSL_TRUSTSTORE_LOCATION=/keystores/truststore.jks
-      # - CONNECT_LISTENERS_HTTPS_SSL_TRUSTSTORE_PASSWORD=${TRUSTSTORE_PASSWORD}
-      # # basic auth
-      # - CONNECT_REST_EXTENSION_CLASSES=org.apache.kafka.connect.rest.basic.auth.extension.BasicAuthSecurityRestExtension
-      # - KAFKA_OPTS=-Djava.security.auth.login.config=/kafka/config/debezium_jaas.conf
+      # ssl
+      - CONNECT_LISTENERS=http://0.0.0.0:8083,https://0.0.0.0:8084
+      - CONNECT_LISTENERS_HTTPS_SSL_ENABLE_PROTOCOL=TLSv1.2
+      - CONNECT_LISTENERS_HTTPS_SSL_KEY_PASSWORD=${KEY_PASSWORD}
+      - CONNECT_LISTENERS_HTTPS_SSL_KEYSTORE_LOCATION=/keystores/keystore.jks
+      - CONNECT_LISTENERS_HTTPS_SSL_KEYSTORE_PASSWORD=${KEYSTORE_PASSWORD}
+      - CONNECT_LISTENERS_HTTPS_SSL_TRUSTSTORE_LOCATION=/keystores/truststore.jks
+      - CONNECT_LISTENERS_HTTPS_SSL_TRUSTSTORE_PASSWORD=${TRUSTSTORE_PASSWORD}
+      # basic auth
+      - CONNECT_REST_EXTENSION_CLASSES=org.apache.kafka.connect.rest.basic.auth.extension.BasicAuthSecurityRestExtension
+      - KAFKA_OPTS=-Djava.security.auth.login.config=/kafka/config/debezium_jaas.conf
       # log level
       - LOG_LEVEL=ERROR
     volumes:
@@ -130,8 +126,6 @@ services:
       - debezium-connect
       - broker
       - mssql
-    # networks:
-    #   - mrjb-debezium-network
 
   # ksqldb-server:
   #   image: confluentinc/cp-ksqldb-server:7.3.1
@@ -165,6 +159,3 @@ services:
   #     - ksqldb-server
   #   entrypoint: /bin/sh
   #   tty: true
-
-# networks:
-#   mrjb-debezium-network:

@@ -3,11 +3,13 @@
 # certificate. This is not ideal for production but conceptualy demonestrates how this 
 # could be set up.
 
+ARG DEBEZIUM_VERSION=2.1.1.Final
+ARG UBUNTU_VERSION=23.04
+
 #####################################################
 #                     UBUNTU                        #
 #####################################################
 
-ARG UBUNTU_VERSION=23.04
 FROM ubuntu:$UBUNTU_VERSION as ssl
 
 # self-signed certificate
@@ -47,8 +49,7 @@ RUN keytool -importcert -keystore keystore.jks -alias localhost -file cert-signe
 #                     DEBEZIUM                      #
 #####################################################
 
-ARG DEBEZIUM_VERSION=2.1
-FROM debezium/connect:2.1
+FROM debezium/connect:$DEBEZIUM_VERSION
 USER root
 
 # copy plugins

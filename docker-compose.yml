@@ -59,12 +59,12 @@ services:
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'false'
 
   debezium-connect:
-    image: mrjb/debezium-connect:${DEBEZIUM_VERSION}
+    image: mrjamiebowman/debezium:${DEBEZIUM_VERSION}
     build:      
       context: ./docker/connect/
       dockerfile: Dockerfile
       tags:
-        - mrjb/debezium-connect:latest
+        - mrjamiebowman/debezium:latest
       args:
         - DEBEZIUM_VERSION=${DEBEZIUM_VERSION}
         - KEYSTORE_PASSWORD=${KEY_PASSWORD}

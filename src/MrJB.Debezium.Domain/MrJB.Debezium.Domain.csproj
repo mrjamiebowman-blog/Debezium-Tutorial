@@ -7,7 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="JsonConverters\" />
+    <Compile Remove="JsonConverters\**" />
+    <EmbeddedResource Remove="JsonConverters\**" />
+    <None Remove="JsonConverters\**" />
   </ItemGroup>
 
   <ItemGroup>

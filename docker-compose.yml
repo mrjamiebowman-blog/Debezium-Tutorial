@@ -21,7 +21,6 @@ services:
       - TZ=UTC
       - ZOOKEEPER_HOST=zookeeper
       - KAFKA_BROKER_ID=2
-
   zookeeper:
     image: confluentinc/cp-zookeeper:7.3.0
     container_name: mrjb-debezium-zookeeper
@@ -29,9 +28,21 @@ services:
       - "2181:2181"
       - "2888:2888"
       - "3888:3888"
+    restart: always
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
+    deploy:
+      resources:
+          limits:
+            cpus: '0.5'
+            memory: '1G'
+          reservations:
+            cpus: '0.25'
+            memory: '512M'
+    volumes:
+      - ./data/zookeeper/data:/var/lib/zookeeper/data
+      - ./data/zookeeper/log:/var/lib/zookeeper/log
 
   kafka:
     image: confluentinc/cp-kafka:7.3.0
@@ -57,9 +68,21 @@ services:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
       # disable auto create topics - https://debezium.io/documentation/reference/stable/configuration/topic-auto-create-config.html#disabling-automatic-topic-creation-for-the-kafka-broker
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'false'
+    deploy:
+      resources:
+          limits:
+            cpus: '0.5'
+            memory: '1G'
+          reservations:
+            cpus: '0.25'
+            memory: '512M'
+    volumes:
+      - ./data/kafka/data:/var/lib/kafka/data/ # windows
+      #- /data/kafka:/var/lib/kafka/data/ # linux
 
   debezium-connect:
     image: mrjamiebowman/debezium:${DEBEZIUM_VERSION}
+    container_name: mrjb-debezium-connect
     build:      
       context: ./docker/connect/
       dockerfile: Dockerfile
@@ -69,8 +92,7 @@ services:
         - DEBEZIUM_VERSION=${DEBEZIUM_VERSION}
         - KEYSTORE_PASSWORD=${KEY_PASSWORD}
         - TRUSTSTORE_PASSWORD=${TRUSTSTORE_PASSWORD}
-        - KEY_PASSWORD=${KEY_PASSWORD}
-    container_name: mrjb-debezium-connect
+        - KEY_PASSWORD=${KEY_PASSWORD}    
     ports:
       - 8083:8083
       - 8084:8084
@@ -81,9 +103,9 @@ services:
       - zookeeper
       - kafka
     healthcheck:
-      # test
-      test: 'curl -k -f -H "Accept:application/json" http://127.0.0.1:8083'
-      # test: basic auth
+      # test: (http/non ssl)
+      test: 'curl -k -f -H "Accept:application/json" http://127.0.0.1:8083'      
+      # test: (https/ssl with basic auth)
       # test: 'curl -k -f -u ${DEBEZIUM_USER}:${DEBEZIUM_PASSWORD} -H "Accept:application/json" https://127.0.0.1:8084'
       interval: 1m30s
       timeout: 10s
@@ -112,8 +134,6 @@ services:
       - KAFKA_OPTS=-Djava.security.auth.login.config=/kafka/config/debezium_jaas.conf
       # log level
       - LOG_LEVEL=ERROR
-    volumes:
-     - ./history:/kafka/connect/history/ # windows
 
   debezium-ui:
     image: debezium/debezium-ui
@@ -129,8 +149,8 @@ services:
 
   # ksqldb-server:
   #   image: confluentinc/cp-ksqldb-server:7.3.1
-  #   hostname: ksqldb-server
   #   container_name: ksqldb-server
+  #   hostname: ksqldb-server
   #   depends_on:
   #     - broker
   #     - connect
